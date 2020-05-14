@@ -11,9 +11,6 @@ class CoinDeskApi( object ):
     def __init__(self):
         pass
 
-    def _buildUrl(self, start, stop):
-        return  "{}?stsart={}&end={}".format(self._API_LINK, start, stop)
-
     def getBetween(self, start=dt.datetime(2020,7,12), stop=None):
         stop = stop or dt.date.today()
         #url = self._buildUrl(start, stop)
@@ -21,35 +18,40 @@ class CoinDeskApi( object ):
         PARAMS = {"start": start,
                   "end": stop}
 
-        r = rq.get(url=API_LINK, params=PARAMS)
+        r = rq.get(url=self._API_LINK, params=PARAMS)
         return r.json()["bpi"]
 
 
-        #API_Data = rq.get(API_LINK)
+
+def main():
+    ca = CoinDeskApi()
+    res = ca.getBetween( dt.date(2020,5,1) )
+    return res
 
 
-
-
-start =
-end = dt.now().strftime("%Y-%m-%d")
-URL = API_LINK + "?start=" + start + "&end=" + end
-
-API_Data = rq.get(API_LINK)
-
-PARAMS = {"start":start,
-          "end": end}
-r = rq.get(url = API_LINK, params = PARAMS)
-data = r.json()["bpi"]
-
-
-dates = np.array(list(data.keys()))
-dates = np.vectorize(lambda x: dt.strptime(x, "%Y-%m-%d"))(dates)
-prices = np.array(list(data.values()))
-
-bitcoin_price = pd.DataFrame({"Date": dates, "ClosePrice": prices})
-
-periods = 7
-
-bitcoin_price["Change"] = bitcoin_price["ClosePrice"].pct_change(periods=periods) * 100.0
-bitcoin_price = bitcoin_price.fillna(0)
-bitcoin_price
+#
+#
+#
+# start =
+# end = dt.now().strftime("%Y-%m-%d")
+# URL = API_LINK + "?start=" + start + "&end=" + end
+#
+# API_Data = rq.get(API_LINK)
+#
+# PARAMS = {"start":start,
+#           "end": end}
+# r = rq.get(url = API_LINK, params = PARAMS)
+# data = r.json()["bpi"]
+#
+#
+# dates = np.array(list(data.keys()))
+# dates = np.vectorize(lambda x: dt.strptime(x, "%Y-%m-%d"))(dates)
+# prices = np.array(list(data.values()))
+#
+# bitcoin_price = pd.DataFrame({"Date": dates, "ClosePrice": prices})
+#
+# periods = 7
+#
+# bitcoin_price["Change"] = bitcoin_price["ClosePrice"].pct_change(periods=periods) * 100.0
+# bitcoin_price = bitcoin_price.fillna(0)
+# bitcoin_price
